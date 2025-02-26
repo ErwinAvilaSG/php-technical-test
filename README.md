@@ -20,7 +20,7 @@ Descargar e instalar(en este caso para windows).
 
    git clone https://github.com/ErwinAvilaSG/php-technical-test.git
    cd php-technical-test
-   
+
 2. **Crear el archivo .env en la raíz (si no existe) con el siguiente contenido**
 DB_HOST=db
 DB_NAME=php_test
@@ -28,17 +28,19 @@ DB_USER=root
 DB_PASSWORD=root
 
 3. **Construir y levantar los contenedores Docker**
-make build
-make up
+docker-compose build
+docker-compose up -d
 
 4. **Instalar dependencias (si es necesario)**
 docker-compose exec php composer install
 
 5. **Actualizar el esquema de la base de datos**
-make migrate
+docker-compose exec php vendor/bin/doctrine orm:schema-tool:update --force
+
 
 6. **Acceder a la aplicación**
 La aplicación se sirve en http://localhost:8080/.
+
 Para registrar un usuario, envía una solicitud POST a http://localhost:8080/register con un cuerpo JSON similar a:
 {
   "name": "Nombre del usuario",
@@ -48,7 +50,7 @@ Para registrar un usuario, envía una solicitud POST a http://localhost:8080/reg
 
 7. **PRUEBAS**
 Para ejecutar las pruebas unitarias y de integración, usa:
-make test
+docker-compose exec php vendor/bin/phpunit
 
 ## Notas Adicionales
 La aplicación utiliza custom types de Doctrine para mapear los Value Objects (UserId, Name, Email, Password).
@@ -56,4 +58,4 @@ El directorio public contiene el front controller (index.php) y el archivo .htac
 El archivo cli-config.php es utilizado por Doctrine para interactuar con la consola de migraciones.
 
 ## Despliegue
-El proyecto está preparado para desplegarse en cualquier máquina con Docker. Basta con clonar el repositorio, configurar el archivo .env y ejecutar los comandos de make mencionados.
+El proyecto está preparado para desplegarse en cualquier máquina con Docker. Basta con clonar el repositorio, configurar el archivo .env y ejecutar los comandos mencionados.
